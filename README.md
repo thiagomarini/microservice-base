@@ -1,6 +1,6 @@
-# GAE Python Micro service base
+# GAE Python micro service boilerplate
 
-The intention of this project is to create a base for the micro services I find myself creating all the time in GAE.
+The intention of this project is to create a project base for the micro services I find myself creating all the time in GAE.
 
 ## In a nutshell:
 

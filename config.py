@@ -1,0 +1,4 @@
+ROOT = '/api/v1/'
+ACCOUNTS = ROOT + 'accounts'
+CACHE_TIMEOUT = 86400  # 1 day
+REQUEST_SALT = 'c4337bc45a8fc544c03f52dc550cd6e1e87021bc896588bd79e901e5'

@@ -1,4 +1,4 @@
-import httplib, logging, json, io
+import httplib, logging, json, io, os
 
 from flask import Flask, request, abort, jsonify, url_for
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
@@ -12,14 +12,10 @@ from util import get_request_hash, guard_request, create_link_header
 
 app = Flask(__name__)
 
-
-def loader(template_key):
-    key = ndb.Key(urlsafe=template_key)
-    template = key.get()
-    return template.content
-
-
-env = jinja2.Environment(loader=jinja2.FunctionLoader(loader))
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
 
 @app.route(ROOT, methods=['GET'])
 def hello():

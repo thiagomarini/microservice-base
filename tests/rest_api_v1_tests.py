@@ -1,31 +1,37 @@
 from webtest import TestApp
 from datetime import datetime
-import httplib, json, logging
+import httplib, json
 from rest_api_v1 import app
 from config import ROOT, ACCOUNTS
 from tests.app_test_base import AppTestBase, extract_uri_from_link_header
-from util import create_auth_header, get_request_hash
+from util import create_auth_header, jwt_encode, jwt_decode
 
 app = TestApp(app)
 
 
-def get(url, params={}):
-    return app.get(url, headers=create_auth_header(params), expect_errors=True)
+def get(url):
+    return app.get(url,
+                   headers=create_auth_header(),
+                   expect_errors=True)
 
 
 def post(url, params):
     return app.post(url,
                     params=params,
-                    headers=create_auth_header(params),
+                    headers=create_auth_header(),
                     expect_errors=True)
+
+
+class JwtAuthTest(AppTestBase):
+    def test_jwt(self):
+        payload = {'foo': 'bar'}
+        encoded = jwt_encode(payload)
+        decoded = jwt_decode(encoded)
+        self.assertEqual(payload, decoded)
 
 
 class ApiV1Test(AppTestBase):
     now = unicode(datetime.now())
-
-    def test_authentication(self):
-        response = get(ROOT, {'invalid': 'value'})
-        self.assertEqual(response.status_int, httplib.UNAUTHORIZED)
 
     def test_api_root(self):
         response = get(ROOT)
@@ -44,7 +50,7 @@ class ApiV1Test(AppTestBase):
 
     def test_it_does_not_create_new_account_if_exists(self):
         self._hit_create_account_endpoint()
-        response = self._hit_create_account_endpoint(True)
+        response = self._hit_create_account_endpoint()
         self.assertEqual(response.status_int, httplib.CONFLICT)
 
     def test_account_exists(self):
@@ -59,7 +65,7 @@ class ApiV1Test(AppTestBase):
         self.assertTrue(resource['username'])
         self.assertTrue(resource['_links']['self'])
 
-    def _hit_create_account_endpoint(self, expect_errors=False):
+    def _hit_create_account_endpoint(self):
         params = {'username': self.ACCOUNT_USERNAME}
         return post(ACCOUNTS, params)
 

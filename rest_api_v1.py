@@ -8,7 +8,7 @@ from google.appengine.ext import ndb
 from config import ROOT, ACCOUNTS
 from models import Account
 from schemas import AccountSchema
-from util import get_request_hash, guard_request, create_link_header
+from util import guard_request, create_link_header
 
 app = Flask(__name__)
 
@@ -16,6 +16,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
+
 
 @app.route(ROOT, methods=['GET'])
 def hello():

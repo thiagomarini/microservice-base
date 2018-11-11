@@ -4,3 +4,5 @@
 !lib/README.md
 .DS_Store
 examples.py
+/venv
+/lib

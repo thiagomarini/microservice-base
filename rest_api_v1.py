@@ -1,10 +1,10 @@
-import httplib, logging, json, io, os
+import httplib, logging, os
 
 from flask import Flask, request, abort, jsonify, url_for
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 import jinja2
 from google.appengine.ext import ndb
-
+from json_payload_validator import validate
 from config import ROOT, ACCOUNTS
 from models import Account
 from schemas import AccountSchema
@@ -27,8 +27,19 @@ def hello():
 @app.route(ACCOUNTS, methods=['POST'])
 def create_account():
     guard_request(request)
-    # returns 400 Bad Request automatically if username is not present
-    username = request.form['username']
+    schema = {
+        'type': 'object',
+        'properties': {
+            'username': {'type': 'string', 'minLength': 2, 'maxLength': 50},
+        },
+        'required': [
+            'username'
+        ]
+    }
+    error = validate(request.json, schema)
+    if error:
+        return error, httplib.BAD_REQUEST
+    username = request.json['username']
 
     def create_existent_account_response():
         msg = 'Account already exists for username: ' + username

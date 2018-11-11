@@ -16,10 +16,10 @@ def get(url):
 
 
 def post(url, params):
-    return app.post(url,
-                    params=params,
-                    headers=create_auth_header(),
-                    expect_errors=True)
+    return app.post_json(url,
+                         params=params,
+                         headers=create_auth_header(),
+                         expect_errors=True)
 
 
 class JwtAuthTest(AppTestBase):

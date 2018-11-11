@@ -1,5 +1,7 @@
 # GAE Python micro service boilerplate
 
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+
 Boilerplate for GAE micro services with JWT support.
 The idea is that to start consuming the service you should have an account first and any API resources would live inside the account ID.
 Example: 

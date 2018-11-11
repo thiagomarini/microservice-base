@@ -8,9 +8,12 @@ from json_payload_validator import validate
 from config import ROOT, ACCOUNTS
 from models import Account
 from schemas import AccountSchema
-from util import guard_request, create_link_header
+from middlewares import JwtMiddleware
+from util import create_link_header
 
 app = Flask(__name__)
+
+app.wsgi_app = JwtMiddleware(app.wsgi_app)
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -20,13 +23,11 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 @app.route(ROOT, methods=['GET'])
 def hello():
-    guard_request(request)
     return 'my_app'
 
 
 @app.route(ACCOUNTS, methods=['POST'])
 def create_account():
-    guard_request(request)
     schema = {
         'type': 'object',
         'properties': {
@@ -69,7 +70,6 @@ def create_account():
 
 @app.route(ACCOUNTS + '/<string:account_key>', methods=['GET'])
 def get_account(account_key):
-    guard_request(request)
     account = _get_entity(account_key)
     return jsonify(AccountSchema.serialize(account))
 

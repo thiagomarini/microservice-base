@@ -1,5 +1,4 @@
-import httplib, logging, jwt
-from flask import abort
+import httplib, jwt
 from config import JWT_SECRET, JWT_AUDIENCE
 from datetime import datetime, timedelta
 
@@ -24,15 +23,3 @@ def create_link_header(uri, rel, title):
 
 def create_jwt_bearer(encoded_token):
     return "Bearer {0}".format(encoded_token)
-
-
-def guard_request(request):
-    if 'Authorization' not in request.headers.keys():
-        logging.warning('[Abort] Authorization header not found in request')
-        abort(httplib.UNAUTHORIZED)
-    try:
-        return jwt_decode(request.headers['Authorization'].replace('Bearer ', ''))
-    except Exception as e:
-        logging.warning('JWT failed to decode')
-        logging.warning(e)
-        abort(httplib.UNAUTHORIZED)

@@ -1,12 +1,16 @@
 # GAE Python micro service boilerplate
 
-A project boilerplate for GAE the micro services with JWT support.
+Boilerplate for GAE micro services with JWT support.
+The idea is that to start consuming the service you should have an account first and any API resources would live inside the account ID.
+Example: 
+- `/ACCOUNT-ID/users`
+- `/ACCOUNT-ID/users/posts`
+- `/ACCOUNT-ID/tags`
 
 ## In a nutshell:
 
 * It uses [Flask](http://flask.pocoo.org/) as it's web framework.
 * It comes with an Account model and endpoints in `rest_api_v1.py` to create and fetch accounts.
-The idea is that to start consuming the service you should have an account and any URI should start with the account ID.
 * It uses [Halogen](https://pypi.python.org/pypi/halogen) to represent data in HAL format.
 * To validate json payloads it uses [json_payload_validator](https://pypi.org/project/json_payload_validator/).
 * Also the request are guarded by the `guard_request` function using [JWT](https://pyjwt.readthedocs.io/en/latest/).
